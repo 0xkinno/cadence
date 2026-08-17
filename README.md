@@ -1,6 +1,6 @@
 <div align="center">
 
-![Cadence banner](./PLACEHOLDER_banner.jpg)
+![Cadence banner](./public/cadence_banner.png)
 
 # CADENCE
 
@@ -48,7 +48,7 @@ Cadence never touches the buyer's money. Ada presents the vendor's own account; 
 
 | Parameter | Detail |
 |---|---|
-| **Live App URL** | [https://cadence-app-c8df21.run.app](https://cadence-app-c8df21.run.app) |
+| **Live App URL** | [https://cadence-ng.vercel.app](https://cadence-ng.vercel.app) |
 | **Demo Video (3 min)** | [https://youtu.be/cadence-demo-2026](https://youtu.be/cadence-demo-2026) |
 | **Target Category** | Small Business Services · *Category Impact* |
 | **Judge Evidence Panel** | `/judge` — live revenue, vendor registry, P&L, uptime |
@@ -62,21 +62,21 @@ Cadence never touches the buyer's money. Ada presents the vendor's own account; 
 <table width="100%">
   <tr>
     <td width="50%" align="center">
-      <img src="./PLACEHOLDER_dashboard.jpg" alt="Control Desk Dashboard" width="100%" />
-      <br/><strong>Control Desk — Overview</strong>
+      <img src="./public/cadence_customer_review.png" alt="Customer Review" width="100%" />
+      <br/><strong>Customer Review</strong>
     </td>
     <td width="50%" align="center">
-      <img src="./PLACEHOLDER_timeline.jpg" alt="Live Action Timeline" width="100%" />
+      <img src="./public/cadence_live_timeline.png" alt="Live Business Timeline" width="100%" />
       <br/><strong>Live Business Timeline</strong>
     </td>
   </tr>
   <tr>
     <td width="50%" align="center">
-      <img src="./PLACEHOLDER_chat.jpg" alt="Buyer Chat with Ada" width="100%" />
-      <br/><strong>Ada — Buyer Chat</strong>
+      <img src="./public/cadence_takeover_inbox.png" alt="Takeover Inbox" width="100%" />
+      <br/><strong>Takeover Inbox</strong>
     </td>
     <td width="50%" align="center">
-      <img src="./PLACEHOLDER_judge.jpg" alt="Judge Evidence Panel" width="100%" />
+      <img src="./public/cadence_judge_evidence.png" alt="Judge Evidence Panel" width="100%" />
       <br/><strong>Judge Evidence Panel</strong>
     </td>
   </tr>
@@ -136,8 +136,6 @@ Vendors pay a flat **₦1,000/month** subscription. Every payment settles throug
 - Every vendor in the registry has a real name, email, and phone for direct verification
 
 > **Honest disclosure (arms-length vs. related-party):** Of the accounts above, three are internal and are **not** counted as arms-length customers: the founder's admin account (Kingsley Oji), and two accounts (Kings Sean, Blessing Ojilere) used for pre-launch testing before opening to the market. All remaining vendors are independent, arms-length merchants. We report this openly because verifiable and honest beats impressive and unprovable.
-
-*Conversation and per-vendor sales figures are recorded live in the dashboard; fill any remaining `[X]` from your current dashboard before submission so every number traces to a screen a judge can open.*
 
 ---
 
@@ -260,7 +258,7 @@ EMAIL_FROM=onboarding@yourdomain.com
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) for the landing page and Control Desk.
+Open **[https://cadence-ng.vercel.app](https://cadence-ng.vercel.app)** for the live production app and Control Desk, or `http://localhost:3000` for local development.
 
 ---
 

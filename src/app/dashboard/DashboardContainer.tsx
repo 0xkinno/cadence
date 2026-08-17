@@ -589,7 +589,7 @@ export default function DashboardContainer({
                     <strong style={{ fontSize: '0.95rem' }}>Public Shop Web Link</strong>
                     <p style={{ fontSize: '0.8rem', color: 'var(--color-graphite)', margin: '4px 0 10px 0' }}>Embed in your Instagram bio or WhatsApp away message.</p>
                     <a href={`/shop/${shop.slug}`} target="_blank" rel="noreferrer" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--color-signal)', textDecoration: 'underline' }}>
-                      http://localhost:9009/shop/{shop.slug}
+                      https://cadence-ng.vercel.app/shop/{shop.slug}
                     </a>
                   </div>
                   <div style={{ padding: '12px', border: '1px solid #E4E3DE', borderRadius: '4px' }}>
