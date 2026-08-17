@@ -57,6 +57,7 @@ docs/cadence-ui-brief
 docs/cadence-ui-brief.md
 scripts/
 !scripts/local-data.json
+!scripts/copy-static.js
 scratch/
 *.pdf
 
