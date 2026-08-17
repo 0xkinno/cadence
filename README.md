@@ -1,12 +1,9 @@
 <div align="center">
 
-![Cadence banner](./public/cadence_banner.png)
-
 # CADENCE
 
 ### The AI sales operator that runs a Nigerian shop while the owner sleeps.
 
-**Cadence lets Nigerian micro-vendors close sales on chat while they sleep.**
 
 ![Category](https://img.shields.io/badge/Category-Small_Business_Services-0F6CBD?style=for-the-badge)
 ![Powered by Gemini](https://img.shields.io/badge/Powered_by-Gemini_Function_Calling-1B72E8?style=for-the-badge&logo=google)
@@ -17,6 +14,10 @@
 ![Status](https://img.shields.io/badge/Status-Live_in_Production-0F6CBD?style=for-the-badge)
 
 </div>
+
+![Cadence banner](./public/cadence_banner.png)
+
+**Cadence lets Nigerian micro-vendors close sales on chat while they sleep.**
 
 ---
 
