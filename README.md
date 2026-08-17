@@ -49,7 +49,7 @@ Cadence never touches the buyer's money. Ada presents the vendor's own account; 
 | Parameter | Detail |
 |---|---|
 | **Live App URL** | [https://cadence-ng.vercel.app](https://cadence-ng.vercel.app) |
-| **Demo Video (3 min)** | [https://youtu.be/cadence-demo-2026](https://youtu.be/cadence-demo-2026) |
+| **Demo Video (3 min)** | [Watch on Youtube](https://youtu.be/bNHmMM_NfFs?si=8_kZvZ4-ybUWXQtg) |
 | **Target Category** | Small Business Services · *Category Impact* |
 | **Judge Evidence Panel** | `/judge` — live revenue, vendor registry, P&L, uptime |
 | **Safety Scorecard** | `/scorecard` — 5/5 grounding, hallucination, payout, handoff, honest-state checks |
