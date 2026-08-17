@@ -197,123 +197,126 @@ MANDATORY RULES:
       },
     ];
 
-    // Call Gemini
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
-      contents,
-      config: {
-        systemInstruction,
-        tools,
-      },
-    });
+    // 6. Gemini Orchestration (Gemini 3.6 Flash)
+    let activeContents: any[] = [...contents];
+    let finalReplyText = '';
+    let maxLoop = 5;
 
-    let finalReplyText = response.text || '';
-    const functionCalls = response.functionCalls || [];
+    while (maxLoop > 0) {
+      maxLoop--;
 
-    // 7. Resolve Function Calls & Timeline Tracing
-    if (functionCalls.length > 0) {
-      const toolResults = [];
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.6-flash',
+        contents: activeContents,
+        config: {
+          systemInstruction,
+          tools,
+        },
+      });
 
-      for (const call of functionCalls) {
-        const { name, args } = call;
-        const argsObj = (args || {}) as { query?: string; productId?: string; reason?: string };
-        let outputData: unknown = null;
+      const modelContent = response.candidates && response.candidates[0] ? response.candidates[0].content : null;
+      const functionCalls = response.functionCalls || [];
 
-        // Log starting trace to database (Autonomy Trace)
-        const traceRef = await db.collection('shops').doc(shopId).collection('logs').add({
-          functionName: name,
-          inputs: args || {},
-          timestamp: new Date().toISOString(),
-          status: 'running',
-        });
+      if (functionCalls.length > 0) {
+        if (modelContent) {
+          activeContents.push(modelContent);
+        }
 
-        if (name === 'get_products') {
-          const q = (argsObj.query as string || '').toLowerCase().trim();
-          const prodQuery = await db.collection('products')
-            .where('shopId', '==', shopId)
-            .get();
+        const toolResults = [];
 
-          const productsList: unknown[] = [];
-          prodQuery.forEach(doc => {
-            const data = doc.data();
-            if (data.name.toLowerCase().includes(q) || data.description.toLowerCase().includes(q)) {
-              productsList.push({ id: doc.id, ...data });
+        for (const call of functionCalls) {
+          const { name, args } = call;
+          const argsObj = (args || {}) as { query?: string; productId?: string; reason?: string };
+          let outputData: unknown = null;
+
+          // Log starting trace to database (Autonomy Trace)
+          const traceRef = await db.collection('shops').doc(shopId).collection('logs').add({
+            functionName: name,
+            inputs: args || {},
+            timestamp: new Date().toISOString(),
+            status: 'running',
+          });
+
+          if (name === 'get_products') {
+            const q = (argsObj.query as string || '').toLowerCase().trim();
+            const prodQuery = await db.collection('products')
+              .where('shopId', '==', shopId)
+              .get();
+
+            const productsList: unknown[] = [];
+            prodQuery.forEach(doc => {
+              const data = doc.data();
+              if (data.name.toLowerCase().includes(q) || data.description.toLowerCase().includes(q)) {
+                productsList.push({ id: doc.id, ...data });
+              }
+            });
+
+            outputData = productsList;
+            // Log Event to Timeline
+            await db.collection('shops').doc(shopId).collection('timeline').add({
+              type: 'catalog',
+              summary: `${shopData.aiName || 'Ada'} searched catalogue for "${q}"`,
+              createdAt: new Date().toISOString(),
+            });
+          } 
+          
+          else if (name === 'check_inventory') {
+            const pId = argsObj.productId as string;
+            const prodDoc = await db.collection('products').doc(pId).get();
+            
+            if (prodDoc.exists) {
+              outputData = { productId: pId, inStock: prodDoc.data()?.inStock };
+            } else {
+              outputData = { productId: pId, inStock: 0, error: 'Product not found.' };
             }
+          } 
+          
+          else if (name === 'present_payment_details') {
+            outputData = {
+              bankName: shopData.payoutBankName,
+              accountNumber: shopData.payoutAccountNumber,
+              accountName: shopData.payoutAccountName,
+            };
+            // Log payment instruction triggers to Timeline
+            await db.collection('shops').doc(shopId).collection('timeline').add({
+              type: 'payment',
+              summary: `${shopData.aiName || 'Ada'} presented account details to ${buyerHandle}`,
+              createdAt: new Date().toISOString(),
+            });
+          } 
+          
+          else if (name === 'escalate_to_human') {
+            await convRef.update({ status: 'human_takeover' });
+            outputData = { status: 'human_takeover_activated' };
+            
+            // Log Takeover Event to Timeline
+            await db.collection('shops').doc(shopId).collection('timeline').add({
+              type: 'takeover',
+              summary: `Takeover requested: "${argsObj.reason || 'No reason specified'}"`,
+              createdAt: new Date().toISOString(),
+            });
+          }
+
+          // Complete Trace logging
+          await traceRef.update({
+            outputs: outputData,
+            status: 'completed',
+            completedAt: new Date().toISOString(),
           });
 
-          outputData = productsList;
-          // Log Event to Timeline
-          await db.collection('shops').doc(shopId).collection('timeline').add({
-            type: 'catalog',
-            summary: `${shopData.aiName || 'Ada'} searched catalogue for "${q}"`,
-            createdAt: new Date().toISOString(),
-          });
-        } 
-        
-        else if (name === 'check_inventory') {
-          const pId = argsObj.productId as string;
-          const prodDoc = await db.collection('products').doc(pId).get();
-          
-          if (prodDoc.exists) {
-            outputData = { productId: pId, inStock: prodDoc.data()?.inStock };
-          } else {
-            outputData = { productId: pId, inStock: 0, error: 'Product not found.' };
-          }
-        } 
-        
-        else if (name === 'present_payment_details') {
-          outputData = {
-            bankName: shopData.payoutBankName,
-            accountNumber: shopData.payoutAccountNumber,
-            accountName: shopData.payoutAccountName,
-          };
-          // Log payment instruction triggers to Timeline
-          await db.collection('shops').doc(shopId).collection('timeline').add({
-            type: 'payment',
-            summary: `${shopData.aiName || 'Ada'} presented account details to ${buyerHandle}`,
-            createdAt: new Date().toISOString(),
-          });
-        } 
-        
-        else if (name === 'escalate_to_human') {
-          await convRef.update({ status: 'human_takeover' });
-          outputData = { status: 'human_takeover_activated' };
-          
-          // Log Takeover Event to Timeline
-          await db.collection('shops').doc(shopId).collection('timeline').add({
-            type: 'takeover',
-            summary: `Takeover requested: "${argsObj.reason || 'No reason specified'}"`,
-            createdAt: new Date().toISOString(),
+          toolResults.push({
+            functionResponse: {
+              name,
+              response: { result: outputData },
+            },
           });
         }
 
-        // Complete Trace logging
-        await traceRef.update({
-          outputs: outputData,
-          status: 'completed',
-          completedAt: new Date().toISOString(),
-        });
-
-        toolResults.push({
-          functionResponse: {
-            name,
-            response: { result: outputData },
-          },
-        });
+        activeContents.push({ role: 'user', parts: toolResults });
+      } else {
+        finalReplyText = response.text || '';
+        break;
       }
-
-      // Send Tool execution responses back to Gemini for the final consolidated text response
-      const followUpResponse = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
-        contents: [
-          ...contents,
-          { role: 'model', parts: functionCalls.map(c => ({ functionCall: c })) },
-          { role: 'user', parts: toolResults },
-        ],
-        config: { systemInstruction, tools },
-      });
-
-      finalReplyText = followUpResponse.text || '';
     }
 
     // 8. Reply Validator & Deterministic Replacements (Upgrades A, B & C)

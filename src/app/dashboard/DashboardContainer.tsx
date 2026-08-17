@@ -1124,14 +1124,14 @@ export default function DashboardContainer({
                           </div>
                           <span style={{ color: 'var(--color-graphite)' }}>{dateFormatted} {timeFormatted}</span>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                          <div>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--color-graphite)' }}>[ INPUT ]</span>
-                            <pre style={{ overflowX: 'auto', backgroundColor: '#F9F9F9', padding: '4px', borderRadius: '2px' }}>{JSON.stringify(log.inputs)}</pre>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', width: '100%' }}>
+                          <div style={{ minWidth: 0, width: '100%' }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--color-graphite)', display: 'block', marginBottom: '4px' }}>[ INPUT ]</span>
+                            <pre style={{ margin: 0, backgroundColor: '#F9F9F9', padding: '6px 8px', borderRadius: '4px', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontSize: '0.75rem', width: '100%', boxSizing: 'border-box' }}>{JSON.stringify(log.inputs)}</pre>
                           </div>
-                          <div>
-                            <span style={{ fontSize: '0.65rem', color: 'var(--color-graphite)' }}>[ OUTPUT ]</span>
-                            <pre style={{ overflowX: 'auto', backgroundColor: '#F9F9F9', padding: '4px', borderRadius: '2px' }}>{JSON.stringify(log.outputs)}</pre>
+                          <div style={{ minWidth: 0, width: '100%' }}>
+                            <span style={{ fontSize: '0.65rem', color: 'var(--color-graphite)', display: 'block', marginBottom: '4px' }}>[ OUTPUT ]</span>
+                            <pre style={{ margin: 0, backgroundColor: '#F9F9F9', padding: '6px 8px', borderRadius: '4px', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontSize: '0.75rem', width: '100%', boxSizing: 'border-box' }}>{JSON.stringify(log.outputs)}</pre>
                           </div>
                         </div>
                       </div>

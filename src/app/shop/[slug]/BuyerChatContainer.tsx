@@ -212,7 +212,7 @@ export default function BuyerChatContainer({ shop, products }: BuyerChatContaine
             boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
           }}>
             <h2 style={{ fontSize: '2.25rem', marginBottom: 'var(--space-xs)', color: 'var(--color-ink)' }}>
-              Welcome to {shop.name}
+              Welcome to {shop.name ? shop.name.replace(/kingsley/gi, 'Cadence') : 'Cadence'}
             </h2>
             <p style={{ color: 'var(--color-graphite)', fontSize: '0.9rem', marginBottom: 'var(--space-lg)' }}>
               Please enter your name or handle so {shop.aiName || 'Ada'} knows how to assist you.

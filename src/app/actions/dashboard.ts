@@ -83,7 +83,7 @@ export async function getDashboardData() {
     if (!shopData || !shopData.name) {
       if (session.email === 'ojilerekingsley@gmail.com') {
         shopData = {
-          name: 'Kingsley Curated Shop',
+          name: 'Cadence Curated Shop',
           slug: 'kingsley',
           plan: 'starter',
           email: 'ojilerekingsley@gmail.com',
