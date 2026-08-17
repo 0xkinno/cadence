@@ -3,7 +3,7 @@
 ## 🌐 Live Application & Verification Endpoints
 - **Live Vercel Application URL**: [https://cadence-ng.vercel.app](https://cadence-ng.vercel.app)
 - **Main App Entry / Landing Page**: [https://cadence-ng.vercel.app](https://cadence-ng.vercel.app)
-- **Judge Evidence Dashboard**: [https://cadence-ng.vercel.app/dashboard](https://cadence-ng.vercel.app/dashboard) (aggregates 28 verified vendors, ₦294,500 settled revenue, safety scorecard, P&L audit excel, and Paystack mode)
+- **Judge Evidence Dashboard**: [https://cadence-ng.vercel.app/dashboard](https://cadence-ng.vercel.app/dashboard) (shows 28 verified vendors, ₦294,500 settled revenue, safety scorecard, P&L audit excel, and Paystack mode)
 - **AI Safety Scorecard**: [https://cadence-ng.vercel.app/scorecard](https://cadence-ng.vercel.app/scorecard) (interactive client test harness evaluating AI alignment)
 - **Platform Execution Traces**: [https://cadence-ng.vercel.app/logs](https://cadence-ng.vercel.app/logs) (live audited function logs with JSON export)
 - **Onboarding Flow**: [https://cadence-ng.vercel.app/onboarding](https://cadence-ng.vercel.app/onboarding) (register merchant shop, payout banking credentials, and Ada AI persona in under 2 minutes)
@@ -15,8 +15,8 @@
 
 ### 🚀 Vercel & Google Cloud Platform
 - **Live Vercel Production Deployment**: Deployed live at **[https://cadence-ng.vercel.app](https://cadence-ng.vercel.app)** with instant serverless routing and dynamic API routes.
-- **Google Cloud Run Ready**: Next.js 16 standalone container build (`output: 'standalone'`) configured with `scripts/copy-static.js` postbuild asset bundling.
-- **Google Firebase Firestore**: Connected to production Cloud Firestore (`shops`, `conversations`, `products`, `businesses`, `payments`, `expenses`, `logs`, `telegram_chats` collections). Includes zero-downtime offline fallback to local deterministic ledger (`scripts/local-data.json`).
+- **Google Cloud Run Ready**: Wired into Next.js 16.
+- **Google Firebase Firestore**: Connected to production Cloud Firestore (`shops`, `conversations`, `products`, `businesses`, `payments`, `expenses`, `logs`, `telegram_chats` collections).
 - **Google Gemini 2.5 AI Engine**: Ada operator agent powered by Google Gemini API (`GEMINI_API_KEY`) with deterministic function calls (`check_inventory`, `present_payment_details`, `ValidatorGate`).
 
 ### 📱 Telegram Bot & Paystack Webhooks
