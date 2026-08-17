@@ -1,5 +1,7 @@
 'use server';
 
+import fs from 'fs';
+import path from 'path';
 import { db } from '@/lib/firebase';
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 
@@ -239,33 +241,78 @@ MANDATORY RULES:
 
           if (name === 'get_products') {
             const q = (argsObj.query as string || '').toLowerCase().trim();
-            const prodQuery = await db.collection('products')
-              .where('shopId', '==', shopId)
-              .get();
-
             const productsList: unknown[] = [];
-            prodQuery.forEach(doc => {
-              const data = doc.data();
-              if (data.name.toLowerCase().includes(q) || data.description.toLowerCase().includes(q)) {
-                productsList.push({ id: doc.id, ...data });
+            
+            try {
+              const prodQuery = await db.collection('products')
+                .where('shopId', '==', shopId)
+                .get();
+
+              prodQuery.forEach(doc => {
+                const data = doc.data();
+                if (data.name.toLowerCase().includes(q) || data.description.toLowerCase().includes(q)) {
+                  productsList.push({ id: doc.id, ...data });
+                }
+              });
+            } catch (e) {
+              console.warn("Firestore get_products failed, using local-data.json fallback:", e);
+              // Fallback to local-data.json
+              try {
+                const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+                if (fs.existsSync(jsonPath)) {
+                  const localData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+                  (localData.products || []).forEach((p: any) => {
+                    if (p.name.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q)) {
+                      productsList.push(p);
+                    }
+                  });
+                }
+              } catch (err) {
+                console.error("Local JSON read error:", err);
               }
-            });
+            }
 
             outputData = productsList;
             // Log Event to Timeline
-            await db.collection('shops').doc(shopId).collection('timeline').add({
-              type: 'catalog',
-              summary: `${shopData.aiName || 'Ada'} searched catalogue for "${q}"`,
-              createdAt: new Date().toISOString(),
-            });
+            try {
+              await db.collection('shops').doc(shopId).collection('timeline').add({
+                type: 'catalog',
+                summary: `${shopData.aiName || 'Ada'} searched catalogue for "${q}"`,
+                createdAt: new Date().toISOString(),
+              });
+            } catch (e) { /* ignore write failure on quota limit */ }
           } 
           
           else if (name === 'check_inventory') {
             const pId = argsObj.productId as string;
-            const prodDoc = await db.collection('products').doc(pId).get();
-            
-            if (prodDoc.exists) {
-              outputData = { productId: pId, inStock: prodDoc.data()?.inStock };
+            let foundStock: number | null = null;
+
+            try {
+              const prodDoc = await db.collection('products').doc(pId).get();
+              if (prodDoc.exists) {
+                foundStock = prodDoc.data()?.inStock ?? 0;
+              }
+            } catch (e) {
+              console.warn("Firestore check_inventory failed, using local-data.json fallback:", e);
+            }
+
+            if (foundStock === null) {
+              try {
+                const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+                if (fs.existsSync(jsonPath)) {
+                  const localData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+                  const match = (localData.products || []).find((p: any) => p.id === pId);
+                  if (match) {
+                    foundStock = match.inStock;
+                  }
+                }
+              } catch (err) {
+                console.error("Local JSON inventory read error:", err);
+              }
+            }
+
+            if (foundStock !== null) {
+              outputData = { productId: pId, inStock: foundStock };
             } else {
               outputData = { productId: pId, inStock: 0, error: 'Product not found.' };
             }
