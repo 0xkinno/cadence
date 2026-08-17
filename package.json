@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node scripts/copy-static.js",
+    "postbuild": "node For-gitignore/scripts/copy-static.js || node scripts/copy-static.js",
     "start": "next start",
     "lint": "eslint"
   },

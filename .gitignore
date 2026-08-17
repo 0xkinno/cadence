@@ -40,25 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# hackathon guides
-cadence-winning-additions.md
-refinedrule.md
-Realrecordsbackendbuild.md
-simulatedstrategy.md
-Enhanced_buildrules.md
-instruction.md
-INSTRUCTIONS.md
-architecture.md
-ARCHITECTURE.md
-progress.md
-PROGRESS.md
-docs/cadence-build-plan.md
-docs/cadence-ui-brief
-docs/cadence-ui-brief.md
-scripts/
-!scripts/local-data.json
-!scripts/copy-static.js
-scratch/
-*.pdf
-
-.vercel
+For-gitignore

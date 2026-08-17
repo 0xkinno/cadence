@@ -49,7 +49,9 @@ export default async function ShopPage({ params }: PageProps) {
   if (!shopData || products.length === 0) {
     let localDataStore: any = null;
     try {
-      const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+      const p1 = path.join(process.cwd(), 'For-gitignore', 'scripts', 'local-data.json');
+      const p2 = path.join(process.cwd(), 'scripts', 'local-data.json');
+      const jsonPath = fs.existsSync(p1) ? p1 : p2;
       if (fs.existsSync(jsonPath)) {
         localDataStore = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
       }

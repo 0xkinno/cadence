@@ -106,7 +106,9 @@ export async function getDashboardData() {
     }
 
     let localDataStore: any = null;
-    const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+    const jsonPathForGitignore = path.join(process.cwd(), 'For-gitignore', 'scripts', 'local-data.json');
+    const jsonPathRoot = path.join(process.cwd(), 'scripts', 'local-data.json');
+    const jsonPath = fs.existsSync(jsonPathForGitignore) ? jsonPathForGitignore : jsonPathRoot;
     try {
       if (fs.existsSync(jsonPath)) {
         localDataStore = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));

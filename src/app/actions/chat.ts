@@ -258,7 +258,9 @@ MANDATORY RULES:
               console.warn("Firestore get_products failed, using local-data.json fallback:", e);
               // Fallback to local-data.json
               try {
-                const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+                const p1 = path.join(process.cwd(), 'For-gitignore', 'scripts', 'local-data.json');
+                const p2 = path.join(process.cwd(), 'scripts', 'local-data.json');
+                const jsonPath = fs.existsSync(p1) ? p1 : p2;
                 if (fs.existsSync(jsonPath)) {
                   const localData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
                   (localData.products || []).forEach((p: any) => {
@@ -298,7 +300,9 @@ MANDATORY RULES:
 
             if (foundStock === null) {
               try {
-                const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+                const p1 = path.join(process.cwd(), 'For-gitignore', 'scripts', 'local-data.json');
+                const p2 = path.join(process.cwd(), 'scripts', 'local-data.json');
+                const jsonPath = fs.existsSync(p1) ? p1 : p2;
                 if (fs.existsSync(jsonPath)) {
                   const localData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
                   const match = (localData.products || []).find((p: any) => p.id === pId);

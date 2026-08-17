@@ -16,9 +16,15 @@ interface PaystackVerifyResponse {
   };
 }
 
+function getLocalDataPath() {
+  const p1 = path.join(process.cwd(), 'For-gitignore', 'scripts', 'local-data.json');
+  const p2 = path.join(process.cwd(), 'scripts', 'local-data.json');
+  return fs.existsSync(p1) ? p1 : (fs.existsSync(path.dirname(p1)) ? p1 : p2);
+}
+
 function getLocalData() {
   try {
-    const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+    const jsonPath = getLocalDataPath();
     if (fs.existsSync(jsonPath)) {
       return JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
     }
@@ -30,7 +36,11 @@ function getLocalData() {
 
 function saveLocalData(data: any) {
   try {
-    const jsonPath = path.join(process.cwd(), 'scripts', 'local-data.json');
+    const jsonPath = getLocalDataPath();
+    const dir = path.dirname(jsonPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), 'utf8');
   } catch (e) {
     // ignore
